@@ -1,0 +1,166 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{setspace}
+\usepackage{graphicx}
+% \usepackage{amsmath}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+% Etc
+\usepackage{titling}
+\usepackage{csquotes}
+
+% math packages
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\theoremstyle{remark}
+\newtheorem*{solusi}{Solusi}
+
+\setstretch{1.25}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+% --- Bahasa (Indonesia) ---
+\usepackage[bahasa]{babel}
+
+% --- Bibliografi (BibLaTeX) ---
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{refs.bib}
+
+% % times new roman
+% \usepackage{newtxtext,newtxmath}
+
+\renewcommand\thesection{\Alph{section}}
+
+% Format section menggunakan tcolorbox
+\definecolor{headerbg}{RGB}{0,0,0}
+\definecolor{headertext}{RGB}{255,255,255}
+
+
+\newtcolorbox{sectionbox}{
+  colback=headerbg,
+  coltext=headertext,
+  boxrule=0pt,
+  arc=0pt,
+  left=4pt,
+  right=4pt,
+  top=1pt,
+  bottom=1pt,
+  width=\dimexpr\textwidth\relax,
+}
+
+\titleformat{\section}[block]
+  {\normalfont\bfseries}
+  {}{0pt}
+  {\begin{sectionbox}\thesection\ }[\end{sectionbox}]
+
+
+% OVERRIDE Caption
+\captionsetup[figure]{labelfont=bf, name=Gambar, justification=centering}
+\captionsetup[table]{labelfont=bf, name=Tabel, justification=centering}
+
+
+\begin{document}
+
+\begin{center}
+    \Large \textbf{BAB}\\[1em]
+    \large \textbf{LOGIKA FUZZY}\\[2em]
+\end{center}
+
+\section{Tujuan Penjelasan Bab}
+Setelah mengikuti penjelasan bab ini, pembaca diharapkan dapat:
+\begin{enumerate}
+    \item Memahami konsep dasar logika fuzzy serta perbedaannya dengan logika biner klasik.
+    \item Menjelaskan struktur sistem fuzzy yang terdiri dari proses fuzzifikasi, basis aturan, mesin inferensi, dan defuzzifikasi.
+    \item Mengidentifikasi jenis-jenis fungsi keanggotaan dan penerapannya dalam pemodelan ketidakpastian.
+    \item Mengimplementasikan sistem inferensi fuzzy sederhana (misalnya metode Mamdani atau Sugeno) melalui contoh kasus nyata.
+    \item Mengevaluasi kelebihan dan keterbatasan logika fuzzy dibandingkan dengan pendekatan deterministik maupun probabilistik.
+\end{enumerate}
+
+
+\section{Pendahuluan}
+
+Sistem logika klasik, seperti logika proposisi (\textit{propositional logic}) dan logika predikat tingkat pertama (\textit{first-order logic}), setiap pernyataan hanya mengenal dua keadaan: benar (\textit{true}) atau salah (\textit{false}). Pendekatan biner seperti ini efektif untuk komputasi matematis dan digital, 
+tetapi sering kali tidak cukup fleksibel untuk merepresentasikan kompleksitas dunia nyata. 
+Dalam banyak kasus, fenomena nyata tidak sepenuhnya hitam atau putih, 
+melainkan memiliki tingkat keabuan di antaranya.
+
+Untuk mengatasi keterbatasan tersebut, muncul \textbf{logika fuzzy} 
+sebagai metode yang memungkinkan nilai kebenaran berada di antara 0 dan 1. 
+Dengan logika fuzzy, konsep seperti “suhu panas”, “kecepatan sedang”, 
+atau “risiko rendah” dapat dimodelkan secara kuantitatif menggunakan 
+fungsi keanggotaan (\textit{membership function}).
+
+Pendekatan ini pertama kali diperkenalkan oleh Lotfi A. Zadeh pada tahun 1965, 
+dan sejak itu telah menjadi dasar bagi berbagai sistem cerdas 
+seperti kontrol suhu otomatis, sistem pendukung keputusan, dan klasifikasi data 
+dalam bidang kecerdasan buatan.
+
+
+\section{Konsep Utama}
+Jelaskan konsep dasar dari topik yang dipilih.  
+Misalnya: definisi, formulasi matematis, asumsi-asumsi dasar, dan hubungan konsep tersebut dengan cabang AI lain.  
+Gunakan rumus bila relevan:
+\[
+    Y = \beta_0 + \beta_1 X + \epsilon
+\]
+Jelaskan arti tiap variabel, parameter, dan hubungannya dengan fenomena yang diamati.
+
+\section{Penyelesaian Kasus}
+Berikan contoh penerapan konsep di atas pada kasus nyata atau dataset sederhana.  
+Contoh alur:
+\begin{enumerate}
+    \item Penjelasan data yang digunakan (sumber, variabel, jumlah observasi).
+    \item Langkah-langkah penerapan metode.
+    \item Perhitungan manual atau logika algoritmik.
+    \item Interpretasi awal dari hasil.
+\end{enumerate}
+
+\section{Coding Penyelesaian Masalah}
+Tuliskan kode yang digunakan untuk implementasi.  
+Gunakan format \texttt{verbatim} atau \texttt{lstlisting} bila ingin menampilkan kode dengan format rapi, misalnya:
+
+\begin{verbatim}
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+X = np.array([[2],[3],[5],[7],[9],[11],[13],[15],[17],[19]])
+y = np.array([50,55,65,70,80,85,90,92,94,98])
+
+model = LinearRegression()
+model.fit(X, y)
+
+print("Intercept:", model.intercept_)
+print("Slope:", model.coef_)
+\end{verbatim}
+
+\section{Hasil dan Interpretasinya}
+Tampilkan hasil keluaran kode di atas (nilai koefisien, prediksi, error metrics, dsb.).  
+Jelaskan interpretasinya dalam konteks permasalahan.  
+Gunakan tabel atau gambar bila diperlukan.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Variabel & Nilai Aktual & Prediksi Model \\ \midrule
+2  & 50 & 52.1 \\
+7  & 70 & 71.8 \\
+15 & 92 & 91.3 \\ \bottomrule
+\end{tabular}
+\caption{Perbandingan Nilai Aktual dan Prediksi}
+\end{table}
+
+% \section{Referensi}
+\printbibliography[title={Referensi}]
+
+\end{document}
