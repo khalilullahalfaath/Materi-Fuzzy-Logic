@@ -4,6 +4,7 @@
 \usepackage{setspace}
 \usepackage{graphicx}
 % \usepackage{amsmath}
+\usepackage{multirow}
 \usepackage{caption}
 \usepackage{booktabs}
 \usepackage{float}
@@ -358,9 +359,10 @@ Bentuk \textit{t-norm} yang umum digunakan antara lain:
 
 Operator minimum paling banyak digunakan karena sederhana dan mudah diinterpretasikan: hasil konjungsi fuzzy adalah nilai keanggotaan terendah dari kedua himpunan pada titik tersebut.
 Sebagai contoh:
-\[
+\begin{equation}
+    \label{eq:konjungsi_minimum}
     \mu_{A \cap B}(x) = \min(\mu_A(x), \mu_B(x)).
-\]
+\end{equation}
 
 Sebaliknya, operator produk memberikan hasil yang lebih halus secara matematis, cocok untuk sistem yang membutuhkan transisi mulus dan komputasi probabilistik:
 \[
@@ -522,9 +524,12 @@ di mana \(f_k(x_1, x_2)\) biasanya berbentuk fungsi linear:
 \]
 dengan \(p_k, q_k, r_k\) sebagai parameter.
 Derajat aktivasi \(\alpha_k\) dihitung sama seperti pada Mamdani, tetapi keluaran sistem diperoleh melalui rata-rata berbobot:
-\[
+\begin{equation}
     y^* = \frac{\sum_{k=1}^n \alpha_k f_k(x_1, x_2)}{\sum_{k=1}^n \alpha_k}.
-\]
+    \label{eq:defuzzifikasi_sugeno}
+\end{equation}
+
+
 Metode Sugeno lebih efisien secara komputasi dan cocok untuk sistem adaptif, terutama ketika digabungkan dengan teknik pembelajaran seperti ANFIS (Adaptive Neuro-Fuzzy Inference System).
 
 \subsubsection{Perbandingan Mamdani dan Sugeno}
@@ -559,7 +564,7 @@ Meski demikian, kombinasi logika fuzzy dengan metode komputasi cerdas lain seper
 
 
 \section{Penyelesaian Kasus}
-Misal, kita mempunyai 100 data bengkel yang berisi id, nilai kualitas servis dari 1 (sangat jelek) sampai 100 (sangat bagus), dan nilai harga dari 1 (sangat murah) sampai 10 (sangat mahal), sebagaimana yang digambarkan oleh Tabel \ref{tab:servis_harga}
+Misal, kita mempunyai 100 data bengkel yang berisi id, nilai kualitas servis dari 1, yang menyatakan kualitas servis sangat jelek sampai 100, yang menyatakan kualitas servis sangat bagus, dan nilai harga dari 1, yang menyatakan sangat murah sampai 10 yang menyatakan sangat mahal, sebagaimana yang digambarkan oleh Tabel \ref{tab:servis_harga}.
 
 \begin{table}[H]
     \centering
@@ -570,13 +575,17 @@ Misal, kita mempunyai 100 data bengkel yang berisi id, nilai kualitas servis dar
         \textbf{id} & \textbf{servis} & \textbf{harga} \\ \hline
         1           & 58              & 7              \\
         2           & 54              & 1              \\
-        3           & 73              & 8              \\ \hline
+        3           & 98              & 2              \\
+        ...         & ...             & ...            \\
+        100         & 11              & 8              \\
+        \hline
     \end{tabular}
 \end{table}
 
-Setelah itu, baru kita menentukan fungsi keanggotaannya untuk masing-masing variabel linguistik, kualitas servis dan harga. Misal, kita memilih untuk menggunakan fungsi keanggotaan berbentuk trapesium.
+Setelah itu, kita baru menentukan fungsi keanggotaan untuk masing-masing variabel linguistik, yaitu kualitas servis dan harga. Misal, kita memilih untuk menggunakan fungsi keanggotaan berbentuk trapesium yang memiliki rumus umum sebagaimana yang terdapat pada Persamaan~\ref{eq:trapesium}.
 
-\[
+\begin{equation}
+    \label{eq:trapesium}
     \mu_A(x) =
     \begin{cases}
         0,                    & x \leq a        \\
@@ -585,12 +594,12 @@ Setelah itu, baru kita menentukan fungsi keanggotaannya untuk masing-masing vari
         \dfrac{d - x}{d - c}, & c < x < d       \\
         0,                    & x \geq d
     \end{cases}
-\]
+\end{equation}
 
-dengan \(a, b, c, d\) masing-masing merupakan batas bawah, awal datar, akhir datar, dan batas atas fungsi trapesium.
+dengan \(a, b, c, d\) masing-masing menyatakan batas bawah, awal datar, akhir datar, dan batas atas fungsi trapesium.
 
 
-\subsubsection*{Fungsi Keanggotaan Kualitas Servis}
+\subsubsection*{Menentukan Fungsi Keanggotaan Kualitas Servis}
 
 Misalkan nilai kualitas servis untuk sebuah bengkel adalah $x$,
 maka fungsi keanggotaan (\textit{membership function}) untuk kualitas servis didefinisikan secara linguistik sebagai berikut:
@@ -605,54 +614,54 @@ maka fungsi keanggotaan (\textit{membership function}) untuk kualitas servis did
 
 Sedemikian sehingga, untuk kasus variabel \textbf{kualitas servis}, fungsi keanggotaan ditentukan sebagai berikut:
 \[
-\mu_{\text{Sangat Jelek}}(x) =
-\begin{cases}
-1, & x \leq 20 \\
-\dfrac{30 - x}{30 - 20}, & 20 < x < 30 \\
-0, & x \geq 30
-\end{cases}
+    \mu_{\text{Sangat Jelek}}(x) =
+    \begin{cases}
+        1,                       & x \leq 20   \\
+        \dfrac{30 - x}{30 - 20}, & 20 < x < 30 \\
+        0,                       & x \geq 30
+    \end{cases}
 \]
 
 \[
-\mu_{\text{Jelek}}(x) =
-\begin{cases}
-0, & x \leq 20 \\
-\dfrac{x - 20}{30 - 20}, & 20 < x < 30 \\
-1, & 30 \leq x \leq 40 \\
-\dfrac{50 - x}{50 - 40}, & 40 < x < 50 \\
-0, & x \geq 50
-\end{cases}
+    \mu_{\text{Jelek}}(x) =
+    \begin{cases}
+        0,                       & x \leq 20         \\
+        \dfrac{x - 20}{30 - 20}, & 20 < x < 30       \\
+        1,                       & 30 \leq x \leq 40 \\
+        \dfrac{50 - x}{50 - 40}, & 40 < x < 50       \\
+        0,                       & x \geq 50
+    \end{cases}
 \]
 
 \[
-\mu_{\text{Biasa}}(x) =
-\begin{cases}
-0, & x \leq 40 \\
-\dfrac{x - 40}{50 - 40}, & 40 < x < 50 \\
-1, & 50 \leq x \leq 65 \\
-\dfrac{75 - x}{75 - 65}, & 65 < x < 75 \\
-0, & x \geq 75
-\end{cases}
+    \mu_{\text{Biasa}}(x) =
+    \begin{cases}
+        0,                       & x \leq 40         \\
+        \dfrac{x - 40}{50 - 40}, & 40 < x < 50       \\
+        1,                       & 50 \leq x \leq 65 \\
+        \dfrac{75 - x}{75 - 65}, & 65 < x < 75       \\
+        0,                       & x \geq 75
+    \end{cases}
 \]
 
 \[
-\mu_{\text{Bagus}}(x) =
-\begin{cases}
-0, & x \leq 65 \\
-\dfrac{x - 65}{75 - 65}, & 65 < x < 75 \\
-1, & 75 \leq x \leq 85 \\
-\dfrac{90 - x}{90 - 85}, & 85 < x < 90 \\
-0, & x \geq 90
-\end{cases}
+    \mu_{\text{Bagus}}(x) =
+    \begin{cases}
+        0,                       & x \leq 65         \\
+        \dfrac{x - 65}{75 - 65}, & 65 < x < 75       \\
+        1,                       & 75 \leq x \leq 85 \\
+        \dfrac{90 - x}{90 - 85}, & 85 < x < 90       \\
+        0,                       & x \geq 90
+    \end{cases}
 \]
 
 \[
-\mu_{\text{Sangat Bagus}}(x) =
-\begin{cases}
-0, & x \leq 85 \\
-\dfrac{x - 85}{90 - 85}, & 85 < x < 90 \\
-1, & x \geq 90
-\end{cases}
+    \mu_{\text{Sangat Bagus}}(x) =
+    \begin{cases}
+        0,                       & x \leq 85   \\
+        \dfrac{x - 85}{90 - 85}, & 85 < x < 90 \\
+        1,                       & x \geq 90
+    \end{cases}
 \]
 
 Atau jika digambarkan dalam bentuk grafik, fungsi keanggotaan kualitas servis dapat digambarkan sebagaimana pada Gambar \ref{fig:member_servis}.
@@ -664,7 +673,7 @@ Atau jika digambarkan dalam bentuk grafik, fungsi keanggotaan kualitas servis da
 \end{figure}
 
 
-\subsubsection*{Fungsi Keanggotaan Harga}
+\subsubsection*{Menentukan Fungsi Keanggotaan Harga}
 Misalkan nilai harga untuk sebuah bengkel adalah $y$,
 maka fungsi keanggotaan (\textit{membership function}) untuk harga didefinisikan secara linguistik sebagai berikut:
 
@@ -714,10 +723,130 @@ Atau jika digambarkan dalam bentuk grafik, fungsi keanggotaan harga dapat digamb
     \label{fig:member_harga}
 \end{figure}
 
-Selanjutnya, kita akan menentukan derajat keanggotaan dari masing-masing data dalam data.
+\subsubsection*{Menentukan Fuzzifikasi}
+
+Selanjutnya, kita akan menentukan derajat keanggotaan (fuzzifikasi) dari masing-masing data dalam data. Berikut adalah hasil untuk tiga data awal yang dituliskan pada Tabel~\ref{tab:keanggotaan_awal}.
+
+% Kualitas Servis:  58
+% Harga:  7
+% Nilai Kualitas Servis:  {'Sangat Jelek': 0, 'Jelek': 0, 'Biasa': 1, 'Bagus': 0, 'Sangat Bagus': 0}
+% Nilai Harga:  {'Murah': 0, 'Sedang': 0.6666666666666666, 'Mahal': 0.3333333333333333}
+
+% Kualitas Servis:  54
+% Harga:  1
+% Nilai Kualitas Servis:  {'Sangat Jelek': 0, 'Jelek': 0, 'Biasa': 1, 'Bagus': 0, 'Sangat Bagus': 0}
+% Nilai Harga:  {'Murah': 1, 'Sedang': 0, 'Mahal': 0}
+
+% Kualitas Servis:  98
+% Harga:  2
+% Nilai Kualitas Servis:  {'Sangat Jelek': 0, 'Jelek': 0, 'Biasa': 0, 'Bagus': 0, 'Sangat Bagus': 1}
+% Nilai Harga:  {'Murah': 1, 'Sedang': 0, 'Mahal': 0}
 
 
+\begin{table}[H]
+    \centering
+    \caption{Derajat Keanggotaan untuk Tiga Data Awal}
+    \label{tab:keanggotaan_awal}
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{ccccccccccc}
+            \toprule
+            \multirow{2}{*}{No}                       & \multirow{2}{*}{Kualitas Servis} & \multirow{2}{*}{Harga} &
+            \multicolumn{5}{c}{Nilai Kualitas Servis} & \multicolumn{3}{c}{Nilai Harga}                                                                                                          \\
+            \cmidrule(lr){4-8} \cmidrule(lr){9-11}
+                                                      &                                  &                        & Sangat Jelek & Jelek & Biasa & Bagus & Sangat Bagus & Murah & Sedang & Mahal \\
+            \midrule
+            1                                         & 58                               & 7                      & 0            & 0     & 1     & 0     & 0            & 0     & 0.667  & 0.333 \\
+            2                                         & 54                               & 1                      & 0            & 0     & 1     & 0     & 0            & 1     & 0      & 0     \\
+            3                                         & 98                               & 2                      & 0            & 0     & 0     & 0     & 1            & 1     & 0      & 0     \\
+            \bottomrule
+        \end{tabular}
+    }
+\end{table}
 
+\subsubsection*{Menentukan Aturan Inferensi}
+
+Setelah mendapatkan hasil fuzzifikasi dari masing-masing data, selanjutnya kita akan menentukan aturan inferensi dalam sistem fuzzy ini. Aturan inferensi fuzzy ditentukan sebagaimana dalam Tabel~\ref{tab:aturan_inferensi}.
+
+\begin{table}[H]
+    \centering
+    \caption{Aturan Inferensi Fuzzy Berdasarkan Harga dan Kualitas Servis}
+    \label{tab:aturan_inferensi}
+    \resizebox{\linewidth}{!}{
+        \begin{tabular}{lccccc}
+            \toprule
+            \multirow{2}{*}{Harga} & \multicolumn{5}{c}{Kualitas Servis}                                                                                                 \\
+            \cmidrule(lr){2-6}
+                                   & Sangat Jelek                        & Jelek                  & Biasa            & Bagus                   & Sangat Bagus            \\
+            \midrule
+            Murah                  & Tidak Direkomendasikan              & Tidak Direkomendasikan & Direkomendasikan & Sangat Direkomendasikan & Sangat Direkomendasikan \\
+            Sedang                 & Tidak Direkomendasikan              & Tidak Direkomendasikan & Alternatif       & Direkomendasikan        & Sangat Direkomendasikan \\
+            Mahal                  & Tidak Direkomendasikan              & Tidak Direkomendasikan & Alternatif       & Direkomendasikan        & Direkomendasikan        \\
+            \bottomrule
+        \end{tabular}
+    }
+\end{table}
+
+Setiap aturan pada Tabel~\ref{tab:aturan_inferensi} diartikan sebagai \textit{aturan konjungsi}. Sebagai contoh, diperoleh
+
+\[
+    \text{IF } (\text{Harga} = \text{Murah})(1) \land (\text{Servis} = \text{Sangat Jelek})(1) \text{ THEN } (\text{Status} = \text{Tidak Direkomendasikan}(1))
+\]
+
+dengan hasil inferensi $Status=\textit{Tidak Direkomendasikan(1)}$, "Tidak Direkomendasikan" didapatkan dari aturan pada Tabel~\ref{tab:aturan_inferensi}, sementara nilai (1), didapatkan dari aturan konjungsi pada Persamaan~\ref{eq:konjungsi_minimum}.
+
+\subsubsection*{Menentukan Defuzzifikasi}
+
+Setelah itu, kita menentukan metode defuzzifikasi yang akan digunakan. Misal, kita menggunakan metode Sugeno model singleton. Kita menentukan batas nilai untuk tiap status, dan didapatkan Gambar~\ref{fig:model_sugeno} sebagai berikut.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{images/hasil_sugeno.png}
+    \caption{Sugeno model singleton.}
+    \label{fig:model_sugeno}
+\end{figure}
+
+Untuk masing-masing nilai pada data, dengan menggunakan Persamaan~\ref{eq:defuzzifikasi_sugeno}, didapatkan hasil berikut.
+
+% Data Ke-1 = 65.0
+% Data Ke-2 = 80.0
+% Data Ke-3 = 100.0
+\begin{table}[H]
+    \centering
+    \caption{Hasil defuzzifikasi untuk tiga data awal}
+    \label{tab:hasil_defuzzifikasi}
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{id} & \textbf{Hasil defuzzifikasi} \\ \hline
+        1           & 65                           \\
+        2           & 80                           \\
+        3           & 100                          \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection*{Mendapatkan tiga bengkel terbaik}
+
+Setelah itu, misal kita ingin mendapatkan tiga bengkel yang terbaik, kita tinggal mengurutkan berdasarkan hasilnya, dan didapatkanlah hasil pada Tabel~\ref{tab:hasil_terbaik} berikut.
+
+% 	id	servis	harga	result
+% 2	3	98	2	100.0
+% 51	52	94	3	100.0
+% 33	34	93	4	100.0
+% 91	92	83	3	100.0
+
+\begin{table}[H]
+    \centering
+    \caption{Daftar Servis dan Harga Bengkel}
+    \label{tab:hasil_terbaik}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{id} & \textbf{servis} & \textbf{harga} & \textbf{hasil} \\ \hline
+        3           & 98              & 2              & 100            \\
+        52          & 94              & 3              & 100            \\
+        34          & 93              & 4              & 100            \\
+        \hline
+    \end{tabular}
+\end{table}
 
 % \begin{figure}
 %     \centering
@@ -727,39 +856,244 @@ Selanjutnya, kita akan menentukan derajat keanggotaan dari masing-masing data da
 % \end{figure}
 
 \section{Coding Penyelesaian Masalah}
-Tuliskan kode yang digunakan untuk implementasi.
-Gunakan format \texttt{verbatim} atau \texttt{lstlisting} bila ingin menampilkan kode dengan format rapi, misalnya:
-
+\subsection*{Menentukan fungsi keanggotaan}
+\subsubsection*{Kualitas servis}
 \begin{verbatim}
-import numpy as np
-from sklearn.linear_model import LinearRegression
+# fungsi membership kualitas servis
+def membershipKualitasServis(x):
+  kualitasServis = {"Sangat Jelek": 0, "Jelek": 0,"Biasa": 0,
+  "Bagus": 0,"Sangat Bagus": 0}
 
-X = np.array([[2],[3],[5],[7],[9],[11],[13],[15],[17],[19]])
-y = np.array([50,55,65,70,80,85,90,92,94,98])
+  a,b,c,d,e,f,g,h,i = 20,30,40,50,65,75,85,90,100
 
-model = LinearRegression()
-model.fit(X, y)
+  # garis datar
+  if x <= a:
+    kualitasServis["Sangat Jelek"] = 1
+  if x >= b and x <= c:
+    kualitasServis["Jelek"] = 1
+  if x >= d and x <= e:
+    kualitasServis["Biasa"] = 1
+  if x >= f and x <= g:
+    kualitasServis["Bagus"] = 1
+  if x >= h and x <= i:
+    kualitasServis["Sangat Bagus"] = 1
 
-print("Intercept:", model.intercept_)
-print("Slope:", model.coef_)
+  # garis miring
+  if x > a and x <= b:
+    kualitasServis["Sangat Jelek"] = -(x - b) / (b - a)
+  if x > a and x < b:
+    kualitasServis["Jelek"] = (x - a) / (b - a)
+  if x > c and x <= d:
+    kualitasServis["Jelek"] = -(x - d) / (d - c)
+  if x > c and x < d:
+    kualitasServis["Biasa"] = (x - c) / (d - c)  
+  if x > e and x <= f:
+    kualitasServis["Biasa"] = -(x - f) / (f - e)
+  if x > e and x < f:
+    kualitasServis["Bagus"] = (x - e) / (f - e) 
+  if x > g and x <= h:
+    kualitasServis["Bagus"] = -(x - h) / (h - g)
+  if x > g and x < h:
+    kualitasServis["Sangat Bagus"] = (x - g) / (h - g) 
+  
+  return kualitasServis
+
+# Diagram nilai kualitas servis
+plt.figure(figsize=(12,3))
+plt.title("Fungsi Membership Kualitas Servis")
+
+plt.plot(range(101),[membershipKualitasServis(x)["Sangat Jelek"] 
+for x in range(101)], "r")
+plt.plot(range(101),[membershipKualitasServis(x)["Jelek"] 
+for x in range(101)], "g")
+plt.plot(range(101),[membershipKualitasServis(x)["Biasa"] 
+for x in range(101)], "b")
+plt.plot(range(101),[membershipKualitasServis(x)["Bagus"] 
+for x in range(101)], "y")
+plt.plot(range(101),[membershipKualitasServis(x)["Sangat Bagus"] 
+for x in range(101)], "c")
+
+plt.plot(0, 0, "r", linewidth = 1.5, label = "Sangat Jelek")
+plt.plot(0, 0, "g", linewidth = 1.5, label = "Jelek")
+plt.plot(0, 0, "b", linewidth = 1.5, label = "Biasa")
+plt.plot(0, 0, "y", linewidth = 1.5, label = "Bagus")
+plt.plot(0, 0, "c", linewidth = 1.5, label = "Sangat Bagus")
+
+plt.xticks(np.arange(0, 105, 5.0))
+plt.xlabel("Nilai x")
+plt.ylabel("Nilai Fuzzy")
+plt.legend()
+plt.show()
+\end{verbatim}
+\subsubsection*{Harga}
+\begin{verbatim}
+# fungsi membership harga
+def membershipHarga(x):
+  harga = {"Murah": 0,"Sedang": 0,"Mahal": 0}
+
+  a,b,c,d,e = 3,5,6,9,10
+
+  # garis datar
+  if x <= a:
+    harga["Murah"] = 1
+  if x >= b and x <= c:
+    harga["Sedang"] = 1
+  if x >= d and x <= e:
+    harga["Mahal"] = 1
+
+  # garis miring
+  if x > a and x <= b:
+    harga["Murah"] = -(x - b) / (b - a)
+  if x > a and x < b:
+    harga["Sedang"] = (x - a) / (b - a)
+  if x > c and x <= d:
+    harga["Sedang"] = -(x - d) / (d - c)
+  if x > c and x < d:
+    harga["Mahal"] = (x - c) / (d - c)  
+  
+  return harga
+
+# Diagram nilai harga
+plt.figure(figsize=(12,3))
+plt.title("Fungsi Membership Harga")
+
+plt.plot(range(11),[membershipHarga(x)["Murah"] for x in range(11)], "r")
+plt.plot(range(11),[membershipHarga(x)["Sedang"] 
+for x in range(11)], "g")
+plt.plot(range(11),[membershipHarga(x)["Mahal"] for x in range(11)], "b")
+
+plt.plot(0, 0, "r", linewidth = 1.5, label = "Murah")
+plt.plot(0, 0, "g", linewidth = 1.5, label = "Sedang")
+plt.plot(0, 0, "b", linewidth = 1.5, label = "Mahal")
+
+plt.xticks(list(range(11)))
+plt.xlabel("Nilai x")
+plt.ylabel("Nilai Fuzzy")
+plt.legend()
+plt.show()
+
+\end{verbatim}
+\subsection*{Menentukan hasil fuzzifikasi}
+\begin{verbatim}
+kumpulanNilaiFuzzy = []
+
+for kualitasServis, harga in zip(bengkel["servis"], bengkel['harga']):
+  nilaiFuzzy = {"Kualitas Servis ": 0, "Harga": 0, 
+  "Nilai Fuzzy Kualitas Servis": 0, "Nilai Fuzzy Harga": 0}
+
+  nilaiFuzzy["Kualitas Servis"] = kualitasServis
+  nilaiFuzzy["Harga"] = harga
+  nilaiFuzzy["Nilai Fuzzy Kualitas Servis"] = 
+  membershipKualitasServis(kualitasServis)
+  nilaiFuzzy["Nilai Fuzzy Harga"] = membershipHarga(harga)
+
+  kumpulanNilaiFuzzy.append(nilaiFuzzy)
+\end{verbatim}
+\subsection*{Menentukan aturan inferensi}
+\begin{verbatim}
+#Untuk setiap rules merupakan Konjungsi.
+#Contoh: IF Harga = Murah (1) ^ Servis = Sangat Jelek (1) THEN Status = Tidak Direkomendasikan
+
+fuzzySetRules = {
+    ('Murah', 'Sangat Jelek') : 'Tidak Direkomendasikan',
+    ('Sedang', 'Sangat Jelek') : 'Tidak Direkomendasikan',
+    ('Mahal', 'Sangat Jelek'): 'Tidak Direkomendasikan',
+    ('Murah', 'Jelek'): 'Tidak Direkomendasikan',
+    ('Sedang', 'Jelek'): 'Tidak Direkomendasikan',
+    ('Mahal', 'Jelek'): 'Tidak Direkomendasikan',
+    ('Murah', 'Biasa'): 'Direkomendasikan',
+    ('Sedang', 'Biasa'): 'Alternatif',
+    ('Mahal', 'Biasa'): 'Alternatif',
+    ('Murah', 'Bagus'): 'Sangat Direkomendasikan',
+    ('Sedang', 'Bagus'): 'Direkomendasikan',
+    ('Mahal', 'Bagus'): 'Direkomendasikan',
+    ('Murah', 'Sangat Bagus'): 'Sangat Direkomendasikan',
+    ('Sedang', 'Sangat Bagus'): 'Sangat Direkomendasikan',
+    ('Mahal', 'Sangat Bagus'): 'Direkomendasikan',
+}
+\end{verbatim}
+\subsection*{Menentukan hasil inferensi}
+\begin{verbatim}
+hasilInterefence = []
+
+def interefence(fuzzed):
+    result = {'Nilai Fuzzy':0, 'Tidak Direkomendasikan': 0, 
+    'Alternatif': 0, 'Direkomendasikan': 0, 'Sangat Direkomendasikan': 0}
+
+    for Servis in fuzzed['Nilai Fuzzy Kualitas Servis'].keys():
+        for Harga in fuzzed['Nilai Fuzzy Harga'].keys():
+            result["Nilai Fuzzy"] = 
+            {"Kualitas Servis": fuzzed["Kualitas Servis"], 
+            "Harga": fuzzed["Harga"]}
+            minValue = min(fuzzed['Nilai Fuzzy Harga'][Harga], 
+            fuzzed['Nilai Fuzzy Kualitas Servis'][Servis])
+
+            #Proses Konjungsi sesuai fuzzy set rules
+            output = fuzzySetRules[(Harga, Servis)]
+
+            if minValue > result[output]:
+                result[output] = minValue
+
+    return result
+
+for fuzzed in kumpulanNilaiFuzzy:
+    hasilInterefence.append(interefence(fuzzed))
+\end{verbatim}
+\subsubsection*{Menentukan defuzzifikasi}
+\begin{verbatim}
+deffuzy = {'Tidak Direkomendasikan': 50, "Alternatif": 65, "Direkomendasikan": 80, "Sangat Direkomendasikan": 100}
+
+def defuzzification(inference, deffuzy):
+    numerator, denominator = 0, 0
+    
+    for output in deffuzy.keys():
+        numerator += inference[output] * deffuzy[output]
+        denominator += inference[output]
+        
+    return numerator/denominator
+
+hasilAkhir = []
+
+for inference in hasilInterefence:
+    hasilAkhir.append(defuzzification(inference, deffuzy))
+\end{verbatim}
+\subsection*{Menampilkan hasil terbaik}
+\begin{verbatim}
+bengkel['result'] = hasilAkhir
+bengkel = bengkel.sort_values(by='result', ascending=False)[:10]
+
+bengkel['id'].to_excel('peringkat.xls', index=False, header=False)  
+bengkel
 \end{verbatim}
 
+Dataset yang digunakan dan Kode dalam tugas ini telah diunggah di Repository github pada pranala berikut \url{https://github.com/khalilullahalfaath/Materi-Fuzzy-Logic/blob/main/tutorials}.
+
 \section{Hasil dan Interpretasinya}
-Tampilkan hasil keluaran kode di atas (nilai koefisien, prediksi, error metrics, dsb.).
-Jelaskan interpretasinya dalam konteks permasalahan.
-Gunakan tabel atau gambar bila diperlukan.
+
+% \subsubsection*{Mendapatkan Tiga Bengkel Terbaik}
+
+Setelah seluruh data bengkel diproses melalui tahapan fuzzifikasi, inferensi, dan defuzzifikasi, setiap bengkel memperoleh nilai akhir yang merepresentasikan tingkat rekomendasi berdasarkan kombinasi antara \textit{kualitas servis} dan \textit{harga}. Nilai ini menunjukkan seberapa layak suatu bengkel direkomendasikan kepada pengguna.
+
+Langkah selanjutnya adalah melakukan pengurutan terhadap seluruh nilai hasil inferensi untuk mengidentifikasi bengkel dengan performa tertinggi. Dari proses pengurutan tersebut, diperoleh tiga bengkel dengan nilai hasil akhir tertinggi, yaitu sebesar 100. Nilai ini menunjukkan bahwa ketiga bengkel tersebut memenuhi kriteria maksimum pada fungsi keanggotaan fuzzy untuk kategori \textit{Sangat Direkomendasikan}. Hasilnya dapat dilihat pada Tabel~\ref{tab:hasil_terbaik_kesimpulan}.
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{@{}lcc@{}}
-        \toprule
-        Variabel & Nilai Aktual & Prediksi Model \\ \midrule
-        2        & 50           & 52.1           \\
-        7        & 70           & 71.8           \\
-        15       & 92           & 91.3           \\ \bottomrule
+    \caption{Daftar Servis dan Harga Bengkel Terbaik}
+    \label{tab:hasil_terbaik_kesimpulan}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{id} & \textbf{Kualitas Servis} & \textbf{Harga} & \textbf{Hasil Akhir} \\ \hline
+        3           & 98                       & 2              & 100                  \\
+        52          & 94                       & 3              & 100                  \\
+        34          & 93                       & 4              & 100                  \\
+        \hline
     \end{tabular}
-    \caption{Perbandingan Nilai Aktual dan Prediksi}
 \end{table}
+
+Ketiga bengkel tersebut memiliki nilai \textit{kualitas servis} yang sangat tinggi (di atas 90) serta harga yang relatif rendah. Kombinasi ini menghasilkan tingkat rekomendasi maksimal karena sesuai dengan aturan inferensi fuzzy pada Tabel~\ref{tab:aturan_inferensi}, di mana kondisi \textit{Servis = Sangat Bagus} dan \textit{Harga = Murah atau Sedang} memberikan output \textit{Status = Sangat Direkomendasikan}. Dengan demikian, sistem berhasil mengidentifikasi bahwa bengkel dengan kualitas servis tinggi dan harga kompetitif merupakan pilihan terbaik bagi pengguna.
+
+Secara interpretatif, hasil ini memperkuat validitas sistem fuzzy yang dibangun. Sistem mampu menyeimbangkan antara dua faktor utama, yaitu kualitas dan harga, secara adaptif tanpa memerlukan batasan kaku seperti pada metode deterministik. Nilai hasil akhir 100 menunjukkan bahwa aturan konjungsi fuzzy menghasilkan tingkat keanggotaan penuh pada kategori rekomendasi tertinggi.
+
 
 % \section{Referensi}
 \printbibliography[title={Referensi}]
