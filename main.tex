@@ -15,7 +15,7 @@
 
 % Etc
 \usepackage{titling}
-\usepackage{csquotes}
+% \usepackage{csquotes}
 
 % math packages
 \usepackage{enumitem}
@@ -30,11 +30,16 @@
 \setlength{\parskip}{0.5em}
 \setlength{\parindent}{0pt}
 
-% --- Bahasa (Indonesia) ---
-\usepackage[bahasa]{babel}
+% \usepackage[indonesian]{babel}
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=ieee,
+  language=auto,
+  autolang=other
+]{biblatex}
 
-% --- Bibliografi (BibLaTeX) ---
-\usepackage[backend=biber,style=ieee]{biblatex}
+% \DeclareLanguageMapping{indonesian}{indonesian}
 \addbibresource{refs.bib}
 
 % % times new roman
@@ -206,7 +211,7 @@ Logika fuzzy memperluas konsep tersebut dengan memperkenalkan \textbf{derajat ke
 \[
     \mu_A: X \rightarrow [0,1].
 \]
-Nilai \(\mu_A(x)=0\) menunjukkan bahwa elemen \(x\) tidak termasuk dalam himpunan fuzzy \(A\), \(\mu_A(x)=1\) menunjukkan keanggotaan penuh, sedangkan \(0 < \mu_A(x) < 1\) menyatakan tingkat keanggotaan parsial. Dengan demikian, derajat keanggotaan merepresentasikan intensitas atau kekuatan hubungan antara elemen dan konsep linguistik yang diwakili oleh himpunan fuzzy.
+Nilai \(\mu_A(x)=0\) menunjukkan bahwa elemen \(x\) tidak termasuk dalam himpunan fuzzy \(A\), \(\mu_A(x)=1\) menunjukkan keanggotaan penuh, sedangkan \(0 < \mu_A(x) < 1\) menyatakan tingkat keanggotaan parsial. Dengan demikian, derajat keanggotaan merepresentasikan intensitas atau kekuatan hubungan antara elemen dan konsep linguistik yang diwakili oleh himpunan fuzzy \cite{ross_fuzzy_2016}.
 
 Sebagai contoh, pada konsep linguistik “suhu panas”, setiap nilai suhu \(x\) memiliki derajat keanggotaan yang menyatakan seberapa “panas” suhu tersebut:
 \[
@@ -220,9 +225,35 @@ Artinya, suhu 25°C hanya sedikit panas, 28°C cukup panas, dan 35°C sepenuhnya
 
 \subsubsection{Bentuk Umum Fungsi Keanggotaan}
 
-Beberapa bentuk fungsi keanggotaan yang umum digunakan antara lain:
+Beberapa bentuk fungsi keanggotaan yang umum digunakan antara lain \cite{saputra_optimasi_2019}.
 
 \begin{itemize}
+    \item \textbf{Fungsi Linear Naik (Increasing Linear Membership Function)}
+          Fungsi ini digunakan untuk merepresentasikan kenaikan derajat keanggotaan secara linier dari 0 ke 1 pada interval \((a,b)\).
+          Dirumuskan sebagai:
+          \[
+              \mu_A(x) =
+              \begin{cases}
+                  0,               & x \leq a,  \\
+                  \frac{x-a}{b-a}, & a < x < b, \\
+                  1,               & x \geq b.
+              \end{cases}
+          \]
+          Fungsi ini cocok untuk memodelkan konsep linguistik seperti “semakin besar”, “semakin cepat”, atau “semakin tinggi”.
+
+    \item \textbf{Fungsi Linear Turun (Decreasing Linear Membership Function)}
+          Fungsi ini merupakan kebalikan dari fungsi linear naik, digunakan untuk menunjukkan penurunan derajat keanggotaan secara linier dari 1 ke 0 pada interval \((a,b)\).
+          Didefinisikan sebagai:
+          \[
+              \mu_A(x) =
+              \begin{cases}
+                  1,               & x \leq a,  \\
+                  \frac{b-x}{b-a}, & a < x < b, \\
+                  0,               & x \geq b.
+              \end{cases}
+          \]
+          Umumnya digunakan untuk merepresentasikan istilah seperti “semakin kecil”, “semakin lambat”, atau “semakin rendah”.
+
     \item \textbf{Fungsi Segitiga (Triangular Membership Function)}
           Didefinisikan oleh tiga parameter \((a,b,c)\) dengan bentuk segitiga, di mana \(a\) dan \(c\) adalah batas bawah dan atas, dan \(b\) titik puncak:
           \[
@@ -262,6 +293,23 @@ Beberapa bentuk fungsi keanggotaan yang umum digunakan antara lain:
           \]
           dengan \(a\) mengatur kemiringan kurva dan \(c\) titik tengah transisi.
 \end{itemize}
+
+Gambar
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{images/semua_fungsi_keanggotaan.pdf}
+    \caption{Berbagai bentuk fungsi keanggotaan (\textit{membership function}) dalam logika fuzzy:
+        (a) linear naik,
+        (b) linear turun,
+        (c) segitiga,
+        (d) trapesium,
+        (e) Gaussian, dan
+        (f) sigmoid.
+        Setiap bentuk menunjukkan cara berbeda dalam memetakan nilai crisp ke derajat keanggotaan dalam interval kontinu [0,1].}
+
+    \label{fig:semua_keanggotaan}
+\end{figure}
+
 
 \subsubsection{Pertimbangan dalam Pemilihan Fungsi Keanggotaan}
 
