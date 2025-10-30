@@ -41,7 +41,7 @@
 % \usepackage{newtxtext,newtxmath}
 
 \renewcommand{\thesection}{\Alph{section}}
-\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
 \renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
 
 % Format section menggunakan tcolorbox
@@ -98,7 +98,7 @@ Dalam banyak kasus, fenomena nyata tidak sepenuhnya hitam atau putih,
 melainkan memiliki tingkat keabuan di antaranya.
 
 Untuk mengatasi keterbatasan tersebut, muncul \textbf{logika fuzzy}
-sebagai metode yang memungkinkan nilai kebenaran berada di antara 0 dan 1.
+sebagai metode yang memungkinkan nilai kebenaran berada di antara 0 dan 1. Logika fuzzy adalah sebuah bentuk logika banyak nilai (\textit{many-valued logic}) dengan nilai kebenaran tiap variabelnya bisa bernilai bilangan riil apapun dari 0 sampai 1 \cite{novak_mathematical_1999}.
 Dengan logika fuzzy, konsep seperti “suhu panas”, “kecepatan sedang”,
 atau “risiko rendah” dapat dimodelkan secara kuantitatif menggunakan
 fungsi keanggotaan (\textit{membership function}).
@@ -106,49 +106,73 @@ fungsi keanggotaan (\textit{membership function}).
 Pendekatan ini pertama kali diperkenalkan oleh Lotfi A. Zadeh pada tahun 1965,
 dan sejak itu telah menjadi dasar bagi berbagai sistem cerdas
 seperti kontrol suhu otomatis, sistem pendukung keputusan, dan klasifikasi data
-dalam bidang kecerdasan buatan.
+dalam bidang kecerdasan buatan \cite{fogarty_fuzzy_2021}.
 
 \section{Konsep Utama}
 
-Bagian ini membahas konsep dasar yang menjadi fondasi dari logika fuzzy, mulai dari pengertian nilai keanggotaan hingga proses penalaran dan pengambilan keputusan berbasis fuzzy. Setiap konsep dijelaskan secara sistematis untuk memberikan pemahaman menyeluruh mengenai mekanisme kerja logika fuzzy dalam merepresentasikan ketidakpastian dan ambiguitas data.
+Bagian ini membahas konsep dasar yang menjadi fondasi dari logika fuzzy, mulai dari pengertian nilai keanggotaan hingga proses penalaran dan pengambilan keputusan berbasis fuzzy.
+
+% TODO: Masukkan definisi fuzzy set
+% TODO: Masukkan definisi fuzzy logic
 
 \subsection{Definisi dan Istilah Dasar}
 
 Sebelum membahas lebih jauh mengenai prinsip kerja logika fuzzy, penting untuk memahami terlebih dahulu beberapa istilah dan notasi dasar yang digunakan dalam pembahasan ini. Istilah-istilah berikut akan menjadi fondasi bagi penjelasan konsep lanjutan seperti derajat keanggotaan, fungsi keanggotaan, dan proses inferensi fuzzy.
 
+\subsubsection{Semesta Pembicaraan (\textit{Universe of Discourse})} \label{section:semesta_pembicaraan}
+Semesta pembicaraan adalah ruang atau himpunan semua kemungkinan elemen yang relevan untuk masalah yang sedang dikaji \cite{ross_fuzzy_2016}. Contoh: jika masalahnya adalah klasifikasi suhu, maka semestanya bisa berupa semua nilai suhu yang mungkin (misalnya dari 0°C sampai 100°C).
+
 \subsubsection{Himpunan (\textit{Set})}
-Himpunan adalah kumpulan elemen atau objek yang memiliki karakteristik tertentu dan dapat didefinisikan dengan jelas. Dalam logika klasik, keanggotaan suatu elemen terhadap himpunan bersifat tegas — elemen tersebut \textit{hanya bisa} menjadi anggota atau bukan anggota.
-Sebagai contoh, jika didefinisikan himpunan
+Himpunan adalah kumpulan elemen atau objek yang memiliki karakteristik tertentu dan dapat didefinisikan dengan jelas. Dalam logika klasik, keanggotaan suatu elemen terhadap himpunan bersifat tegas (disebut juga \textit{Crisp Set} atau \textbf{Himpunan Tegas}), sedemikian sehingga elemen tersebut \textit{hanya bisa} menjadi anggota atau bukan anggota \cite{ross_fuzzy_2016}.
+Sebagai contoh, jika didefinisikan himpunan tegas dalam semesta pembicaraan dalam Bagian \ref{section:semesta_pembicaraan},
 \[
-    A = \{x \mid x > 10\},
+    A = \{x \mid 27 \leq x \leq 35\},
 \]
-maka elemen \(x = 12\) adalah anggota \(A\), sedangkan \(x = 8\) bukan anggota \(A\).
+yang merepresentasikan "suhu hangat' dalam derajat Celcius, maka elemen $x=30$ merupakan anggota dari $A$, sedangkan $x=25$ bukan anggota $A$.
 
-\subsubsection{Fungsi Keanggotaan (\textit{Membership Function})}
-Fungsi keanggotaan adalah fungsi yang memetakan setiap elemen dari domain (semesta pembicaraan) ke nilai keanggotaan dalam rentang \([0,1]\). Dalam logika klasik, fungsi keanggotaan hanya menghasilkan nilai 0 atau 1. Namun dalam logika fuzzy, fungsi ini dapat menghasilkan nilai kontinu di antara keduanya.
-Fungsi keanggotaan dilambangkan dengan:
-\[
-    \mu_A(x) : X \rightarrow [0,1],
-\]
-di mana \(X\) adalah semesta pembicaraan, \(A\) adalah himpunan fuzzy, dan \(\mu_A(x)\) menunjukkan tingkat keanggotaan elemen \(x\) terhadap himpunan \(A\).
-
-\subsubsection{Semesta Pembicaraan (\textit{Universe of Discourse})}
-Semesta pembicaraan adalah keseluruhan himpunan nilai yang mungkin dari suatu variabel. Nilai-nilai ini mencakup seluruh domain yang relevan untuk konteks tertentu.
-Sebagai contoh, jika variabel yang digunakan adalah “suhu udara”, maka semesta pembicaraannya dapat didefinisikan sebagai \(X = [0, 50]\) °C.
-
-\subsubsection{Himpunan Fuzzy (\textit{Fuzzy Set})}
-Himpunan fuzzy adalah generalisasi dari himpunan klasik, di mana setiap elemen tidak hanya dinyatakan sebagai anggota atau bukan anggota, tetapi memiliki tingkat keanggotaan tertentu terhadap himpunan tersebut. Secara matematis, himpunan fuzzy \(A\) didefinisikan sebagai:
+Di sisi lain, himpunan fuzzy (himpunan kabur) adalah generalisasi dari himpunan klasik yang setiap elemennya tidak hanya dinyatakan sebagai anggota atau bukan anggota, tetapi memiliki tingkat keanggotaan tertentu terhadap himpunan tersebut. Secara matematis, himpunan fuzzy \(A\) didefinisikan sebagai:
 \[
     A = \{(x, \mu_A(x)) \mid x \in X\}.
 \]
-Dengan demikian, himpunan fuzzy merupakan kumpulan pasangan nilai yang menunjukkan elemen \(x\) beserta derajat keanggotaannya terhadap \(A\).
+Dengan demikian, \textbf{himpunan fuzzy} merupakan kumpulan pasangan nilai yang menunjukkan elemen \(x\) beserta derajat keanggotaannya terhadap \(A\). Misalnya, suhu 29°C bisa dianggap “hangat” dengan keanggotaan 0.7, sedangkan 25°C dengan 0.4. Gambar \ref{fig:crisp_and_fuzzy} menggambarkan perbedaan keduanya.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{images/fuzzy.png}
+    \caption{Perbedaan antara (a) Himpunan Tegas dan (b) Himpunan Kabur \cite{ross_fuzzy_2016}}
+    \label{fig:crisp_and_fuzzy}
+\end{figure}
+
+
+
+\subsubsection{Fungsi Keanggotaan (\textit{Membership Function})}
+Fungsi keanggotaan merepresentasikan hubungan antara elemen pada semesta pembicaraan dan tingkat keanggotaannya terhadap suatu himpunan \cite{ross_fuzzy_2016}. Dalam logika klasik, fungsi ini disebut \textit{fungsi karakteristik} (\(\chi_A(x)\)) yang memetakan setiap elemen \(x \in X\) ke dua nilai diskrit, yaitu 0 atau 1:
+\[
+    \chi_A(x) =
+    \begin{cases}
+        1, & x \in A,    \\
+        0, & x \notin A.
+    \end{cases}
+\]
+Pemetaan ini menyatakan bahwa elemen hanya dapat sepenuhnya menjadi anggota atau bukan anggota suatu himpunan. Dalam logika fuzzy, fungsi keanggotaan diperluas menjadi pemetaan kontinu:
+\[
+    \mu_A(x) : X \rightarrow [0,1],
+\]
+sehingga setiap elemen dapat memiliki derajat keanggotaan parsial terhadap himpunan. Dengan demikian, \(\mu_A(x)\) merupakan generalisasi dari \(\chi_A(x)\) pada logika klasik \cite{ross_fuzzy_2016}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{images/fungsi_keanggotaan_fuzzy.pdf}
+    \caption{Perbedaan fungsi keanggotaan antara (a) Himpunan Tegas dan (b) Himpunan Kabur \cite{ross_fuzzy_2016}}
+    \label{fig:keanggotaan_fuzzy}
+\end{figure}
 
 \subsubsection{Variabel Linguistik (\textit{Linguistic Variable})}
-Variabel linguistik adalah variabel yang nilainya dinyatakan dalam bentuk istilah bahasa alami seperti “rendah”, “sedang”, “tinggi”, atau “panas”. Setiap istilah linguistik direpresentasikan oleh satu himpunan fuzzy dengan fungsi keanggotaan tertentu.
+Variabel linguistik adalah variabel yang nilainya dinyatakan dalam bentuk istilah bahasa alami seperti “rendah”, “sedang”, “tinggi”, atau “panas”. Setiap istilah linguistik direpresentasikan oleh satu himpunan fuzzy dengan fungsi keanggotaan tertentu \cite{zadeh_concept_1975}.
 Sebagai contoh, untuk variabel “suhu”, dapat didefinisikan tiga istilah linguistik: “dingin”, “hangat”, dan “panas”, yang masing-masing memiliki fungsi keanggotaan berbeda terhadap domain suhu.
 
 \subsubsection{Label Linguistik (\textit{Linguistic Label})}
-Label linguistik merupakan istilah spesifik yang digunakan untuk menyatakan nilai dari suatu variabel linguistik. Misalnya, dalam variabel linguistik “kecepatan mobil”, label linguistik yang digunakan dapat berupa “lambat”, “sedang”, dan “cepat”. Label ini digunakan dalam perumusan aturan fuzzy seperti “IF kecepatan tinggi THEN jarak pengereman jauh”.
+Label linguistik atau nilai linguistik atau disebut juga sebagai terma merupakan istilah spesifik yang digunakan untuk menyatakan nilai dari suatu variabel linguistik \cite{noauthor_linguistic_nodate,rinaldi_munir_logika_2021}. Misalnya, dalam variabel linguistik “kecepatan mobil”, label linguistik yang digunakan dapat berupa “lambat”, “sedang”, dan “cepat”. Label ini digunakan dalam perumusan aturan fuzzy seperti “IF kecepatan tinggi THEN jarak pengereman jauh”.
 
 \subsubsection{Operator Logika Fuzzy}
 Operator logika fuzzy digunakan untuk mengombinasikan atau memodifikasi nilai keanggotaan. Operator dasar yang digunakan meliputi:
@@ -166,9 +190,9 @@ Metode inferensi yang umum digunakan antara lain metode Mamdani dan metode Sugen
 \subsubsection{Defuzzifikasi (\textit{Defuzzification})}
 Defuzzifikasi adalah tahap akhir dalam sistem inferensi fuzzy yang berfungsi untuk mengubah hasil fuzzy (bernilai kontinu antara 0 dan 1) menjadi nilai tegas (crisp output). Nilai ini digunakan untuk pengambilan keputusan atau pengendalian aktual. Beberapa metode populer adalah \textit{centroid}, \textit{bisector}, dan \textit{mean of maximum}.
 
-\subsection{Derajat Keanggotaan}
+\subsection{Derajat dan Fungsi Keanggotaan}
 
-Dalam logika klasik, hubungan antara suatu elemen dengan himpunan bersifat biner: suatu elemen hanya dapat menjadi anggota atau bukan anggota dari himpunan tersebut. Secara matematis, hal ini dinyatakan dengan fungsi keanggotaan \(\mu_A(x)\) yang hanya mengambil dua nilai, yaitu:
+Dalam logika klasik, hubungan antara suatu elemen dengan himpunan bersifat biner: suatu elemen hanya dapat menjadi anggota atau bukan anggota dari himpunan tersebut. Secara matematis, hal ini dinyatakan dengan fungsi keanggotaan \(\mu_A(x)\) yang hanya mengambil dua nilai:
 \[
     \mu_A(x) =
     \begin{cases}
@@ -176,106 +200,83 @@ Dalam logika klasik, hubungan antara suatu elemen dengan himpunan bersifat biner
         0, & \text{jika } x \notin A.
     \end{cases}
 \]
-Pendekatan seperti ini sesuai untuk sistem yang memiliki batasan tegas, tetapi menjadi tidak memadai ketika konsep yang dimodelkan bersifat relatif atau samar. Misalnya, tidak ada batas eksak yang universal untuk menentukan kapan suatu suhu dapat disebut “panas” atau “dingin”.
+Pendekatan seperti ini sesuai untuk sistem dengan batasan tegas, tetapi menjadi tidak memadai ketika konsep yang dimodelkan bersifat relatif atau samar. Misalnya, tidak ada batas universal yang pasti untuk menentukan kapan suatu suhu dapat disebut “panas” atau “dingin”.
 
 Logika fuzzy memperluas konsep tersebut dengan memperkenalkan \textbf{derajat keanggotaan} (\textit{degree of membership}), yaitu ukuran sejauh mana suatu elemen termasuk dalam sebuah himpunan fuzzy. Nilai keanggotaan dinyatakan dalam interval kontinu \([0,1]\), di mana:
-\begin{itemize}
-    \item \(\mu_A(x) = 0\) berarti \(x\) sama sekali bukan anggota himpunan \(A\),
-    \item \(\mu_A(x) = 1\) berarti \(x\) sepenuhnya merupakan anggota \(A\),
-    \item \(0 < \mu_A(x) < 1\) menunjukkan bahwa \(x\) hanya sebagian menjadi anggota \(A\).
-\end{itemize}
-Dengan demikian, derajat keanggotaan merepresentasikan tingkat kepastian atau kekuatan hubungan antara elemen dengan himpunan fuzzy.
+\[
+    \mu_A: X \rightarrow [0,1].
+\]
+Nilai \(\mu_A(x)=0\) menunjukkan bahwa elemen \(x\) tidak termasuk dalam himpunan fuzzy \(A\), \(\mu_A(x)=1\) menunjukkan keanggotaan penuh, sedangkan \(0 < \mu_A(x) < 1\) menyatakan tingkat keanggotaan parsial. Dengan demikian, derajat keanggotaan merepresentasikan intensitas atau kekuatan hubungan antara elemen dan konsep linguistik yang diwakili oleh himpunan fuzzy.
 
-Sebagai contoh, pada konsep linguistik “suhu panas”, setiap nilai suhu \(x\) memiliki tingkat keanggotaan yang menunjukkan seberapa “panas” suhu tersebut. Misalnya:
+Sebagai contoh, pada konsep linguistik “suhu panas”, setiap nilai suhu \(x\) memiliki derajat keanggotaan yang menyatakan seberapa “panas” suhu tersebut:
 \[
     \mu_{\text{panas}}(25) = 0.3, \quad
     \mu_{\text{panas}}(28) = 0.7, \quad
     \mu_{\text{panas}}(35) = 1.0.
 \]
-Artinya, suhu 25°C dianggap hanya sedikit panas, 28°C cukup panas, dan 35°C sepenuhnya panas. Nilai-nilai ini tidak muncul secara acak, tetapi ditentukan oleh \textbf{fungsi keanggotaan} yang didefinisikan untuk himpunan fuzzy tersebut.
+Artinya, suhu 25°C hanya sedikit panas, 28°C cukup panas, dan 35°C sepenuhnya panas. Nilai-nilai ini ditentukan oleh \textbf{fungsi keanggotaan} yang mendeskripsikan hubungan kuantitatif antara variabel numerik dan persepsi linguistik.
 
-Secara konseptual, derajat keanggotaan mencerminkan cara manusia berpikir dalam istilah kualitatif. Dalam kehidupan sehari-hari, banyak kategori yang tidak memiliki batas tegas—misalnya “tinggi”, “muda”, “cepat”, atau “berisiko rendah”. Logika fuzzy mengubah ketidakpastian linguistik ini menjadi bentuk matematis yang dapat dihitung.
-
-Lebih lanjut, derajat keanggotaan juga dapat dipahami sebagai bentuk \textbf{kuantisasi persepsi}, yaitu proses mengubah penilaian subjektif menjadi nilai numerik yang merepresentasikan tingkat keyakinan terhadap suatu kategori. Dengan cara ini, logika fuzzy memungkinkan sistem komputasi menangani informasi yang sebelumnya hanya bisa diolah secara kualitatif oleh manusia.
-
-Dalam implementasinya, nilai derajat keanggotaan dapat diperoleh melalui:
-\begin{enumerate}
-    \item \textbf{Pendefinisian langsung}, berdasarkan pengetahuan pakar atau batas-batas empiris variabel.
-    \item \textbf{Pendekatan statistik}, dengan mengestimasi distribusi data dan menyesuaikan fungsi keanggotaan agar sesuai dengan pola observasi.
-    \item \textbf{Proses pembelajaran}, misalnya dengan algoritma adaptif atau metode optimasi yang menyesuaikan bentuk fungsi keanggotaan secara otomatis.
-\end{enumerate}
-
-Oleh karena itu, derajat keanggotaan bukan hanya representasi matematis, tetapi juga jembatan antara bahasa alami manusia dan sistem formal logika. Ia menjadi inti dari seluruh mekanisme logika fuzzy, karena semua proses inferensi dan keputusan bergantung pada nilai-nilai keanggotaan yang ditetapkan untuk setiap elemen dalam domain masalah.
-
-
-\subsection{Fungsi Keanggotaan (\textit{Membership Function})}
-Fungsi keanggotaan (\textit{membership function}) adalah komponen inti dalam logika fuzzy yang mendefinisikan bagaimana setiap elemen dalam semesta pembicaraan (\textit{universe of discourse}) dipetakan ke nilai derajat keanggotaan dalam interval kontinu \([0,1]\). Secara matematis, fungsi keanggotaan \(\mu_A(x)\) untuk suatu himpunan fuzzy \(A\) didefinisikan sebagai:
-\[
-    \mu_A: X \rightarrow [0,1],
-\]
-dengan \(X\) merupakan himpunan semesta, dan \(\mu_A(x)\) menyatakan tingkat keanggotaan elemen \(x\) terhadap himpunan \(A\).
-
-Nilai \(\mu_A(x) = 0\) menunjukkan bahwa elemen \(x\) tidak termasuk dalam himpunan fuzzy \(A\), sedangkan \(\mu_A(x) = 1\) menyatakan keanggotaan penuh. Nilai di antara 0 dan 1 menggambarkan derajat parsial keanggotaan, yang merepresentasikan ketidakpastian atau ambiguitas dalam konsep linguistik.
-
-Pemilihan bentuk fungsi keanggotaan berperan penting dalam desain sistem fuzzy, karena menentukan bagaimana input numerik diterjemahkan ke nilai linguistik. Pemilihan fungsi yang tepat bergantung pada karakteristik data, kebutuhan komputasi, serta interpretasi semantik dari variabel linguistik yang digunakan.
+\textbf{Fungsi keanggotaan} (\textit{membership function}) merupakan komponen inti dalam logika fuzzy yang memetakan setiap elemen dari semesta pembicaraan (\textit{universe of discourse}) ke nilai derajat keanggotaan pada interval \([0,1]\). Bentuk fungsi keanggotaan menentukan karakteristik transisi antara “tidak termasuk” dan “sepenuhnya termasuk” dalam suatu himpunan fuzzy, sehingga berperan penting dalam representasi semantik dan hasil inferensi fuzzy.
 
 \subsubsection{Bentuk Umum Fungsi Keanggotaan}
+
 Beberapa bentuk fungsi keanggotaan yang umum digunakan antara lain:
 
 \begin{itemize}
     \item \textbf{Fungsi Segitiga (Triangular Membership Function)}
-          Fungsi ini memiliki bentuk sederhana berupa segitiga dengan parameter \((a,b,c)\), di mana \(a\) dan \(c\) adalah batas bawah dan batas atas, sedangkan \(b\) adalah titik puncak dengan derajat keanggotaan 1. Fungsi ini dirumuskan sebagai:
+          Didefinisikan oleh tiga parameter \((a,b,c)\) dengan bentuk segitiga, di mana \(a\) dan \(c\) adalah batas bawah dan atas, dan \(b\) titik puncak:
           \[
               \mu_A(x) =
               \begin{cases}
-                  0,               & x \leq a \text{ atau } x \geq c \\
-                  \frac{x-a}{b-a}, & a < x \leq b                    \\
-                  \frac{c-x}{c-b}, & b < x < c
+                  0,               & x \leq a \text{ atau } x \geq c, \\
+                  \frac{x-a}{b-a}, & a < x \leq b,                    \\
+                  \frac{c-x}{c-b}, & b < x < c.
               \end{cases}
           \]
-          Kelebihannya adalah efisiensi komputasi tinggi, cocok untuk sistem real-time dengan sumber daya terbatas. Namun, transisinya bersifat linier dan bisa terlalu kasar untuk data yang lebih halus.
+          Fungsi ini sederhana dan efisien secara komputasi, cocok untuk sistem real-time.
 
     \item \textbf{Fungsi Trapesium (Trapezoidal Membership Function)}
-          Fungsi ini merupakan perluasan dari fungsi segitiga, dengan empat parameter \((a,b,c,d)\). Fungsi trapesium memiliki area datar (\textit{plateau}) di bagian atas yang menunjukkan keanggotaan penuh dalam rentang nilai tertentu:
+          Merupakan generalisasi fungsi segitiga dengan empat parameter \((a,b,c,d)\):
           \[
               \mu_A(x) =
               \begin{cases}
-                  0,               & x \leq a \text{ atau } x \geq d \\
-                  \frac{x-a}{b-a}, & a < x \leq b                    \\
-                  1,               & b < x \leq c                    \\
-                  \frac{d-x}{d-c}, & c < x < d
+                  0,               & x \leq a \text{ atau } x \geq d, \\
+                  \frac{x-a}{b-a}, & a < x \leq b,                    \\
+                  1,               & b < x \leq c,                    \\
+                  \frac{d-x}{d-c}, & c < x < d.
               \end{cases}
           \]
-          Fungsi ini sering digunakan ketika variabel linguistik memiliki rentang nilai yang dianggap “sepenuhnya benar”, seperti suhu “hangat” pada interval tertentu.
+          Umum digunakan ketika terdapat rentang nilai yang dianggap sepenuhnya memenuhi suatu kategori linguistik.
 
     \item \textbf{Fungsi Gaussian (Gaussian Membership Function)}
-          Fungsi Gaussian memberikan transisi yang halus dan kontinu, didefinisikan oleh dua parameter, yaitu mean (\(c\)) dan standar deviasi (\(\sigma\)):
+          Memberikan transisi halus dan kontinu dengan dua parameter, mean (\(c\)) dan standar deviasi (\(\sigma\)):
           \[
-              \mu_A(x) = e^{-\frac{1}{2}\left(\frac{x - c}{\sigma}\right)^2}
+              \mu_A(x) = e^{-\frac{1}{2}\left(\frac{x - c}{\sigma}\right)^2}.
           \]
-          Fungsi ini ideal untuk data yang terdistribusi normal dan memberikan hasil inferensi yang lebih lembut dibanding bentuk linier. Namun, komputasinya relatif lebih berat karena melibatkan operasi eksponensial.
+          Cocok untuk data berdistribusi normal dan sistem dengan kebutuhan inferensi yang lembut.
 
     \item \textbf{Fungsi Sigmoid (Sigmoidal Membership Function)}
-          Fungsi sigmoid digunakan untuk memodelkan kenaikan atau penurunan derajat keanggotaan secara bertahap tanpa batas yang tegas. Bentuk umumnya adalah:
+          Digunakan untuk memodelkan kenaikan atau penurunan bertahap tanpa batas tegas:
           \[
-              \mu_A(x) = \frac{1}{1 + e^{-a(x-c)}}
+              \mu_A(x) = \frac{1}{1 + e^{-a(x-c)}},
           \]
-          dengan \(a\) mengontrol kemiringan kurva dan \(c\) menentukan titik tengah transisi. Fungsi ini cocok untuk variabel yang menggambarkan perubahan progresif seperti “semakin besar”, “semakin tinggi”, atau “semakin cepat”.
+          dengan \(a\) mengatur kemiringan kurva dan \(c\) titik tengah transisi.
 \end{itemize}
 
 \subsubsection{Pertimbangan dalam Pemilihan Fungsi Keanggotaan}
-Pemilihan fungsi keanggotaan bukan hanya persoalan estetika kurva, melainkan keputusan konseptual dan empiris. Beberapa faktor yang perlu dipertimbangkan antara lain:
+
+Pemilihan bentuk fungsi keanggotaan bergantung pada:
 \begin{enumerate}
-    \item \textbf{Karakteristik Data:} Distribusi data menentukan apakah transisi perlu halus (Gaussian) atau cukup linier (segitiga/trapesium).
-    \item \textbf{Kebutuhan Komputasi:} Sistem dengan keterbatasan waktu proses sebaiknya menggunakan fungsi sederhana seperti segitiga.
-    \item \textbf{Interpretasi Linguistik:} Fungsi keanggotaan harus mampu merepresentasikan makna linguistik secara intuitif. Misalnya, fungsi sigmoid lebih tepat untuk variabel dengan batas asimptotik, seperti “risiko tinggi”.
-    \item \textbf{Tujuan Aplikasi:} Dalam kontrol presisi tinggi, fungsi Gaussian atau kombinasi adaptif sering dipilih untuk meningkatkan akurasi inferensi.
+    \item \textbf{Karakteristik data}, menentukan apakah diperlukan transisi halus (Gaussian) atau linier (segitiga/trapesium);
+    \item \textbf{Kebutuhan komputasi}, fungsi sederhana lebih efisien untuk sistem waktu nyata;
+    \item \textbf{Interpretasi linguistik}, fungsi harus merepresentasikan makna istilah secara intuitif;
+    \item \textbf{Tujuan aplikasi}, misalnya kontrol presisi tinggi memerlukan bentuk fungsi yang lebih kompleks.
 \end{enumerate}
 
-Dengan demikian, fungsi keanggotaan bukan sekadar alat matematis, tetapi representasi semantik dari konsep kabur yang diolah secara komputasional. Keputusan dalam mendefinisikannya sangat memengaruhi perilaku keseluruhan sistem fuzzy, terutama pada tahap inferensi dan defuzzifikasi.
+Dengan demikian, derajat keanggotaan dan fungsi keanggotaan merupakan dua aspek tak terpisahkan dalam teori himpunan fuzzy. Derajat keanggotaan memformalkan intensitas keanggotaan suatu elemen, sementara fungsi keanggotaan menentukan bagaimana intensitas tersebut dibentuk secara matematis dan ditafsirkan secara semantik.
 
 \subsection{Variabel Linguistik dan Himpunan Fuzzy}
-Variabel linguistik (\textit{linguistic variable}) adalah konsep fundamental dalam sistem logika fuzzy yang diperkenalkan oleh Lotfi A. Zadeh (1975). Berbeda dengan variabel numerik yang bernilai eksak, variabel linguistik memiliki nilai berupa kata-kata atau istilah dalam bahasa alami, seperti “rendah”, “sedang”, atau “tinggi”. Setiap istilah linguistik tersebut diwakili oleh suatu \textbf{himpunan fuzzy} yang memiliki fungsi keanggotaan tertentu terhadap domain numeriknya.
+Variabel linguistik (\textit{linguistic variable}) adalah konsep fundamental dalam sistem logika fuzzy yang diperkenalkan oleh Lotfi A. Zadeh \cite{zadeh_concept_1975}. Berbeda dengan variabel numerik yang bernilai eksak, variabel linguistik memiliki nilai berupa kata-kata atau istilah dalam bahasa alami, seperti “rendah”, “sedang”, atau “tinggi”. Setiap istilah linguistik tersebut diwakili oleh suatu \textbf{himpunan fuzzy} yang memiliki fungsi keanggotaan tertentu terhadap domain numeriknya.
 
 Secara formal, variabel linguistik \(V\) dapat dinyatakan sebagai suatu tuple:
 \[
@@ -331,9 +332,6 @@ Contoh fungsi pengubah yang umum digunakan:
 \end{itemize}
 
 Dengan demikian, istilah linguistik kompleks dapat dibangun secara sistematis dari himpunan fuzzy dasar tanpa kehilangan interpretasi semantik aslinya.
-
-\subsubsection{Kesimpulan}
-Variabel linguistik dan himpunan fuzzy membentuk fondasi semantik sistem logika fuzzy. Kombinasi keduanya memungkinkan sistem komputasional merepresentasikan pengetahuan berbasis bahasa alami secara kuantitatif, memfasilitasi pengambilan keputusan dalam situasi yang tidak pasti, ambigu, atau subjektif.
 
 \subsection{Operasi Logika Fuzzy}
 
@@ -430,9 +428,6 @@ Pemilihan operator fuzzy (t-norm, t-conorm, dan negasi) mempengaruhi hasil infer
     \item Operator \textbf{produk–penjumlahan} lebih cocok untuk sistem yang membutuhkan transisi halus dan perhitungan berbasis probabilistik.
     \item Operator \textbf{bounded} digunakan ketika nilai keanggotaan perlu dibatasi agar tidak keluar dari interval [0,1] akibat akumulasi nilai ekstrem.
 \end{itemize}
-
-\subsubsection{Kesimpulan}
-Operasi logika fuzzy memperluas konsep klasik ke ranah kontinu, memungkinkan perhitungan terhadap pernyataan yang memiliki tingkat kebenaran parsial. Fleksibilitas dalam pemilihan operator memberikan kemampuan adaptasi yang tinggi bagi sistem fuzzy untuk berbagai konteks aplikasi, mulai dari kontrol otomatis hingga pengambilan keputusan berbasis ketidakpastian.
 
 \subsection{Aturan Fuzzy dan Sistem Inferensi Fuzzy}
 
@@ -533,9 +528,12 @@ Derajat aktivasi \(\alpha_k\) dihitung sama seperti pada Mamdani, tetapi keluara
 Metode Sugeno lebih efisien secara komputasi dan cocok untuk sistem adaptif, terutama ketika digabungkan dengan teknik pembelajaran seperti ANFIS (Adaptive Neuro-Fuzzy Inference System).
 
 \subsubsection{Perbandingan Mamdani dan Sugeno}
-
-\begin{table}[h!]
+Tabel \ref{tab:perbedaan_masu} membandingkan antara metode Mamdani dan Sugeno.
+\begin{table}[H]
     \centering
+    \caption{Perbedaan antara Mamdani dan Sugeno}
+    \label{tab:perbedaan_masu}
+
     \begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
         \hline
         \textbf{Aspek}                                    & \textbf{Mamdani}                    & \textbf{Sugeno}                           \\ \hline
@@ -545,11 +543,8 @@ Metode Sugeno lebih efisien secara komputasi dan cocok untuk sistem adaptif, ter
         \textbf{Efisiensi Komputasi}                      & Relatif lebih berat                 & Lebih cepat, cocok untuk sistem real-time \\ \hline
         \textbf{Aplikasi Umum}                            & Kontrol industri, sistem pakar      & Sistem adaptif, prediksi, dan optimasi    \\ \hline
     \end{tabular}
-\end{table}
 
-\subsubsection{Kesimpulan}
-Sistem inferensi fuzzy merupakan inti dari penerapan logika fuzzy yang memungkinkan pengambilan keputusan berbasis aturan linguistik.
-Metode Mamdani memberikan interpretasi yang lebih intuitif dan cocok untuk kontrol berbasis pengetahuan manusia, sementara metode Sugeno menawarkan efisiensi tinggi dan kemudahan integrasi dengan model matematis atau algoritma pembelajaran mesin.
+\end{table}
 
 
 \subsection{Keunggulan dan Keterbatasan Logika Fuzzy}
@@ -1096,6 +1091,7 @@ Secara interpretatif, hasil ini memperkuat validitas sistem fuzzy yang dibangun.
 
 
 % \section{Referensi}
+\newpage
 \printbibliography[title={Referensi}]
 
 \end{document}
