@@ -39,6 +39,31 @@
   autolang=other
 ]{biblatex}
 
+\DefineBibliographyStrings{english}{%
+  references   = {Daftar Pustaka},
+  bibliography = {Daftar Pustaka},
+%   online       = {Daring},
+  and          = {dan},
+  andothers    = {dkk.},
+  pages        = {hlm.},
+  urlseen      = {diakses},
+  % bulan:
+  january      = {Januari},
+  february     = {Februari},
+  march        = {Maret},
+  april        = {April},
+  may          = {Mei},
+  june         = {Juni},
+  july         = {Juli},
+  august       = {Agustus},
+  september    = {September},
+  october      = {Oktober},
+  november     = {November},
+  december     = {Desember},
+%   available    = {tersedia},
+}
+
+
 % \DeclareLanguageMapping{indonesian}{indonesian}
 \addbibresource{refs.bib}
 
@@ -76,8 +101,40 @@
 \captionsetup[figure]{labelfont=bf, name=Gambar, justification=centering}
 \captionsetup[table]{labelfont=bf, name=Tabel, justification=centering}
 
+% --- Title page ---
+\title{%
+  \textbf{Tugas Mata Kuliah} \\
+  \large Prinsip Kecerdasan Artifisial \\
+  \large Tugas Opsional UTS}
+  
+\author{Khalilullah Al Faath \\ NIU: 566643 \\ Magister Ilmu Komputer \\ [1cm]
+  \includegraphics[width=0.4\textwidth]{images/logo-ugm.png}}
+\date{Universitas Gadjah Mada \\ Semester Gasal 2025/2026}
+
+\makeatletter
+\renewcommand{\maketitle}{%
+  \begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\LARGE \@title \par}
+    \vspace{2cm}
+    
+    {\large \@author \par}
+    
+    \vfill
+    
+    {\large \@date \par}
+  \end{titlepage}
+}
+\makeatother
+
 
 \begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
 
 \begin{center}
     \Large \textbf{BAB}\\[1em]
